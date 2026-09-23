@@ -97,8 +97,13 @@
   .mag .coverphoto { position: absolute; inset: 0; background: #bbb center/cover; }
   .mag .spine { position: absolute; left: 0; top: 0; bottom: 0; width: 7px; background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,0)); z-index: 1; }
   .mag .sheen { position: absolute; inset: 0; background: linear-gradient(105deg, rgba(255,255,255,.10), rgba(255,255,255,0) 45%); }
-  .mag .masthead { position: absolute; left: 6%; right: 6%; top: 5%; width: 88%; z-index: 2; filter: invert(1) drop-shadow(0 2px 10px rgba(0,0,0,.4)); }
-  .mag .issue { position: absolute; right: 7%; bottom: 6%; z-index: 2; font: 500 9px/1 Inter, sans-serif; letter-spacing: .2em; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.45); }
+  /* The cover as the app sets it: the white wordmark across the top, the
+     price and issue number above it, the month under its right end. */
+  .mag .masthead { position: absolute; left: 3%; right: 3%; top: 3.5%; width: 94%; z-index: 2; filter: drop-shadow(0 1px 8px rgba(0,0,0,.25)); }
+  .mag .small { position: absolute; z-index: 2; font: 600 clamp(6px, 1.6vh, 9px)/1 Inter, sans-serif; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.35); }
+  .mag .price { left: 3.5%; top: 2.6%; }
+  .mag .issue { left: 50%; top: 2.6%; transform: translateX(-50%); }
+  .mag .date  { right: 3.5%; top: 19%; }
 
   .cta-block { position: absolute; left: 0; right: 0; bottom: 10vh; text-align: center; opacity: 0; pointer-events: none; }
   .cta-block a { pointer-events: auto; display: inline-block; background: var(--ink); color: #fff; text-decoration: none; padding: 14px 22px; border-radius: 999px; font-weight: 500; font-size: 15px; }
@@ -138,8 +143,10 @@
         <div class="mag" id="mag">
           <div class="coverphoto" id="coverphoto"></div>
           <div class="sheen"></div>
-          <img class="masthead" src="wordmark.png" alt="mosaic">
-          <div class="issue">OCT 2026</div>
+          <img class="masthead" src="wordmark-white.png" alt="mosaic">
+          <div class="small price">$9.99</div>
+          <div class="small issue">Issue 1</div>
+          <div class="small date">October 2026</div>
           <div class="spine"></div>
         </div>
         <div class="front">
