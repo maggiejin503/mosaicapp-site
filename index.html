@@ -2,23 +2,296 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mosaic</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mosaic — your month, printed</title>
+<meta name="description" content="Pick 30 photos from your month. The words are written for you. A real magazine arrives at your door.">
+<meta property="og:title" content="Mosaic — your month, printed">
+<meta property="og:description" content="Pick 30 photos. The words are written for you. A magazine arrives at your door.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  body { font: 16px/1.6 -apple-system, Inter, Helvetica, Arial, sans-serif; color: #111; background: #fff; margin: 0; }
-  main { max-width: 680px; margin: 0 auto; padding: 96px 24px; }
-  h1 { font-size: 44px; letter-spacing: -1px; margin: 0 0 12px; }
-  p { color: #333; }
-  a { color: #2a73ed; }
-  .links { margin-top: 48px; color: #777; font-size: 14px; }
+  :root {
+    --ink: #111; --muted: #777; --paper: #f6f4ef; --line: rgba(0,0,0,.08);
+    --vh: 100vh;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 Inter, -apple-system, Helvetica, Arial, sans-serif; overflow-x: hidden; }
+  body.ready { }
+
+  /* The scroll track: two full cycles, so a wrap is never visible. */
+  #track { position: relative; }
+  #stage { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; }
+
+  /* Top bar */
+  header { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; align-items: center; justify-content: space-between;
+           padding: 18px 22px; pointer-events: none; }
+  header img { height: 22px; width: auto; pointer-events: auto; }
+  header nav { display: flex; gap: 18px; align-items: center; pointer-events: auto; font-size: 13px; }
+  header nav a { color: var(--ink); text-decoration: none; }
+  header nav .cta { background: var(--ink); color: #fff; padding: 9px 14px; border-radius: 999px; font-weight: 500; }
+  footer { position: fixed; inset: auto 0 0 0; z-index: 20; display: flex; justify-content: space-between; padding: 14px 22px; font-size: 12px; color: var(--muted); pointer-events: none; }
+  footer a { color: var(--muted); text-decoration: none; pointer-events: auto; }
+  footer .hint { display: flex; align-items: center; gap: 8px; }
+  footer .hint i { display: inline-block; width: 1px; height: 22px; background: var(--muted); animation: drop 1.6s ease-in-out infinite; }
+  @keyframes drop { 0% { transform: scaleY(0); transform-origin: top; opacity: 0 } 40% { transform: scaleY(1); opacity: 1 } 100% { transform: scaleY(0); transform-origin: bottom; opacity: 0 } }
+
+  /* Words */
+  .words { position: absolute; left: 0; right: 0; top: 11vh; text-align: center; padding: 0 20px; pointer-events: none; }
+  .words h1, .words h2 { position: absolute; left: 0; right: 0; margin: 0; padding: 0 20px; opacity: 0; will-change: transform, opacity; }
+  .words h1 { font: italic 400 clamp(46px, 9vw, 112px)/1 'Instrument Serif', Georgia, serif; letter-spacing: -0.02em; }
+  .words h2 { font: 400 clamp(30px, 5.2vw, 62px)/1.06 'Instrument Serif', Georgia, serif; letter-spacing: -0.015em; }
+  .words h2 i { font-style: italic; }
+  .words .step { display: block; font: 500 11px/1 Inter, sans-serif; letter-spacing: .22em; color: var(--muted); margin-bottom: 18px; }
+  .words p.sub { position: absolute; left: 0; right: 0; top: 0; margin: 0; padding: 0 20px; color: var(--muted); font-size: 15px; opacity: 0; }
+
+  /* The scene: everything the photos become */
+  #scene { position: absolute; inset: 0; }
+  .tile { position: absolute; left: 50%; top: 50%; width: var(--tw); height: var(--th); margin: calc(var(--th) / -2) 0 0 calc(var(--tw) / -2);
+          border-radius: 8px; background: #ddd center/cover no-repeat; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 12px 30px rgba(0,0,0,.10);
+          will-change: transform, opacity; transform-origin: center; overflow: hidden; }
+  .tile::after { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .12 0'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>"); mix-blend-mode: multiply; opacity: .5; }
+  .tile.hero { z-index: 30; }
+  .counter { position: absolute; left: 50%; transform: translateX(-50%); bottom: 12vh; font: 500 12px/1 Inter, sans-serif; letter-spacing: .2em; color: var(--muted); opacity: 0; }
+
+  /* The page: the hero photo with its words */
+  .page { position: absolute; left: 50%; top: 58%; width: min(84vw, 560px); transform: translate(-50%, -50%); display: grid; grid-template-columns: 1fr; gap: 14px; opacity: 0; pointer-events: none; justify-items: center; }
+  .page .photo { height: min(34vh, 300px); aspect-ratio: 4/5; width: auto; border-radius: 8px; background: #ccc center/cover; visibility: hidden; }
+  .page .cap { font: italic 400 clamp(22px, 3.2vw, 34px)/1.15 'Instrument Serif', Georgia, serif; min-height: 1.2em; }
+  .page .desc { font: 400 14px/1.55 Inter, sans-serif; color: #333; min-height: 4.6em; }
+  .page .cursor { display: inline-block; width: 2px; height: .95em; background: var(--ink); vertical-align: -0.1em; margin-left: 2px; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0 } }
+  @media (min-width: 720px) { .page { grid-template-columns: auto 1fr; gap: 32px; align-items: end; width: min(70vw, 760px); justify-items: start; } .page .photo { height: min(48vh, 440px); } }
+
+  /* The magazine */
+  .mag { position: absolute; left: 50%; top: 58%; height: min(52vh, 400px); aspect-ratio: 8.5/11; width: auto; transform: translate(-50%, -50%);
+         background: #fff; border-radius: 3px; box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 30px 60px rgba(0,0,0,.18); opacity: 0; will-change: transform, opacity; overflow: hidden; }
+  .mag .coverphoto { position: absolute; inset: 9% 9% 26% 9%; background: #bbb center/cover; border-radius: 2px; }
+  .mag .masthead { position: absolute; left: 9%; top: 3.5%; font: italic 400 22px/1 'Instrument Serif', serif; letter-spacing: -0.02em; }
+  .mag .month { position: absolute; left: 9%; bottom: 9%; font: 500 10px/1 Inter, sans-serif; letter-spacing: .22em; color: #333; }
+  .mag .no { position: absolute; right: 9%; bottom: 9%; font: 500 10px/1 Inter, sans-serif; letter-spacing: .12em; color: #999; }
+  .mag .spine { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(90deg, rgba(0,0,0,.14), rgba(0,0,0,0)); }
+
+  /* The mailer */
+  .mailer { position: absolute; left: 50%; top: 58%; width: min(70vw, 380px); max-height: 46vh; aspect-ratio: 1.35; transform: translate(-50%, -50%); perspective: 700px;
+            background: #d9cdb8; border-radius: 6px; box-shadow: 0 30px 60px rgba(0,0,0,.18); opacity: 0; will-change: transform, opacity; }
+  .mailer::before { content: ""; position: absolute; inset: 0; border-radius: 6px; background: linear-gradient(180deg, rgba(255,255,255,.35), rgba(0,0,0,.06)); }
+  .mailer .flap { position: absolute; left: 0; right: 0; top: 0; height: 46%; background: #cfc2ab; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; will-change: transform; backface-visibility: hidden; box-shadow: 0 6px 12px rgba(0,0,0,.08); }
+  .mailer .label { position: absolute; left: 10%; bottom: 12%; background: #fff; padding: 10px 12px; border-radius: 3px; font: 400 10px/1.5 Inter, sans-serif; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+  .mailer .label b { display: block; font-weight: 600; }
+  .mailer .stamp { position: absolute; right: 8%; top: 52%; width: 34px; height: 40px; border: 1px dashed #8a7a5a; border-radius: 2px; font: italic 400 14px/40px 'Instrument Serif', serif; text-align: center; color: #6b5c3f; }
+
+  .cta-block { position: absolute; left: 0; right: 0; bottom: 10vh; text-align: center; opacity: 0; pointer-events: none; }
+  .cta-block a { pointer-events: auto; display: inline-block; background: var(--ink); color: #fff; text-decoration: none; padding: 14px 22px; border-radius: 999px; font-weight: 500; font-size: 15px; }
+  .cta-block small { display: block; margin-top: 12px; color: var(--muted); font-size: 12px; }
+
+  @media (prefers-reduced-motion: reduce) { .tile, .mag, .mailer, .page { transition: none !important; } }
 </style>
 </head>
 <body>
-<main>
-<h1>mosaic</h1>
-<p>Your month, printed. Pick the photographs, write a line for each, and a magazine arrives.</p>
-<p>Made in Brooklyn. Questions: <a href="mailto:hello@mosaicapp.nyc">hello@mosaicapp.nyc</a></p>
-<p class="links"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
-</main>
+<header>
+  <img src="wordmark.png" alt="Mosaic">
+  <nav><a href="mailto:hello@mosaicapp.nyc">Contact</a><a class="cta" href="mailto:hello@mosaicapp.nyc?subject=Mosaic%20beta">Join the beta</a></nav>
+</header>
+<footer>
+  <span class="hint"><i></i> scroll</span>
+  <span><a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; Made in Brooklyn</span>
+</footer>
+
+<div id="track">
+  <div id="stage">
+    <div class="words">
+      <h1 id="h0">Your month, printed.</h1>
+      <p class="sub" id="s0">A magazine made from your phone. Every month.</p>
+      <h2 id="h1"><span class="step">01</span>Pick thirty photos<br>from your <i>camera roll</i>.</h2>
+      <h2 id="h2"><span class="step">02</span>The words are<br><i>written for you</i>.</h2>
+      <h2 id="h3"><span class="step">03</span>Printed, and<br><i>at your door</i>.</h2>
+      <h2 id="h4">Then next month,<br><i>again</i>.</h2>
+    </div>
+
+    <div id="scene">
+      <div class="counter" id="counter">0 OF 30</div>
+      <div class="page" id="page">
+        <div class="photo" id="pagephoto"></div>
+        <div>
+          <div class="cap" id="cap"></div>
+          <div class="desc" id="desc"></div>
+        </div>
+      </div>
+      <div class="mag" id="mag">
+        <div class="spine"></div>
+        <div class="masthead">mosaic</div>
+        <div class="coverphoto" id="coverphoto"></div>
+        <div class="month" id="month">OCTOBER</div>
+        <div class="no">No. 1</div>
+      </div>
+      <div class="mailer" id="mailer">
+        <div class="flap" id="flap"></div>
+        <div class="stamp">m</div>
+        <div class="label"><b>You</b>Your door<br>Your city</div>
+      </div>
+      <div class="cta-block" id="get">
+        <a href="mailto:hello@mosaicapp.nyc?subject=Mosaic%20beta">Join the beta</a>
+        <small>iPhone · first issue ships this fall</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---- Photos. Put image URLs here and the tiles use them; anything null
+  // is a coloured placeholder so the page never looks broken.
+  const PHOTOS = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+  const HUES = [24, 200, 340, 96, 42, 262, 180, 8, 150, 300, 60, 220, 330, 120, 30, 250, 190, 12];
+  const CAPTION = "Done with fetch.";
+  const DESC = "Two balls in the grass and neither one in her mouth. Thursday on the front lawn, and she'd clearly been at this a while.";
+
+  const scene = document.getElementById("scene");
+  const N = PHOTOS.length;
+  const tiles = [];
+  for (let i = 0; i < N; i++) {
+    const t = document.createElement("div");
+    t.className = "tile" + (i === 0 ? " hero" : "");
+    const h = HUES[i % HUES.length];
+    t.style.background = PHOTOS[i] ? `url(${PHOTOS[i]}) center/cover` :
+      `linear-gradient(${135 + (i * 37) % 90}deg, hsl(${h} 45% ${62 + (i % 3) * 6}%), hsl(${(h + 40) % 360} 40% ${40 + (i % 4) * 5}%))`;
+    scene.appendChild(t); tiles.push(t);
+  }
+  const heroBG = tiles[0].style.background;
+  document.getElementById("pagephoto").style.background = heroBG;
+  document.getElementById("coverphoto").style.background = heroBG;
+
+  const $ = (id) => document.getElementById(id);
+  const el = { h0: $("h0"), s0: $("s0"), h1: $("h1"), h2: $("h2"), h3: $("h3"), h4: $("h4"), counter: $("counter"),
+               page: $("page"), pagephoto: $("pagephoto"), cap: $("cap"), desc: $("desc"), mag: $("mag"), mailer: $("mailer"),
+               flap: $("flap"), get: $("get"), month: $("month") };
+
+  // ---- Helpers
+  const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const io = (x) => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;      // ease in-out
+  const out = (x) => 1 - Math.pow(1 - x, 3);
+  const lerp = (a, b, x) => a + (b - a) * x;
+
+  // ---- Layout numbers, recomputed on resize
+  let W = 0, H = 0, tw = 0, th = 0, grid = [], pile = [], pageRect = null;
+  function layout() {
+    W = innerWidth; H = innerHeight;
+    const cols = W < 720 ? 4 : 6, rows = Math.ceil(N / cols);
+    tw = Math.min(W / cols * 0.7, 120, H * 0.11); th = tw * 1.25;
+    document.documentElement.style.setProperty("--tw", tw + "px");
+    document.documentElement.style.setProperty("--th", th + "px");
+    const gapX = tw * 1.18, gapY = th * 1.14;
+    grid = tiles.map((_, i) => ({ x: (i % cols - (cols - 1) / 2) * gapX, y: (Math.floor(i / cols) - (rows - 1) / 2) * gapY + H * 0.16 }));
+    // The pile: a loose stack, each a little off the last.
+    let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    pile = tiles.map((_, i) => ({ x: (rnd() - .5) * tw * 0.5, y: (rnd() - .5) * th * 0.25 + H * 0.12, r: (rnd() - .5) * 22 }));
+    pile[0] = { x: 0, y: H * 0.12, r: -2 };
+    const r = el.pagephoto.getBoundingClientRect();
+    pageRect = { x: r.left + r.width / 2 - W / 2, y: r.top + r.height / 2 - H / 2, w: r.width, h: r.height };
+  }
+
+  function show(node, o, y = 0, s = 1) { node.style.opacity = o; node.style.transform = `translateY(${y}px) scale(${s})`; }
+
+  // ---- The story, as a function of t in [0, 1)
+  function render(t) {
+    // Words
+    show(el.h0, 1 - seg(t, .08, .13), lerp(0, -30, seg(t, .08, .13)));
+    el.s0.style.top = `calc(clamp(46px, 9vw, 112px) + 22px)`;
+    show(el.s0, 1 - seg(t, .06, .11), lerp(0, -20, seg(t, .06, .11)));
+    const wordIn = (node, a, b, c, d) => show(node, seg(t, a, b) * (1 - seg(t, c, d)), lerp(24, 0, out(seg(t, a, b))) + lerp(0, -24, seg(t, c, d)));
+    wordIn(el.h1, .13, .19, .32, .36);
+    wordIn(el.h2, .37, .43, .58, .62);
+    wordIn(el.h3, .62, .68, .84, .88);
+    wordIn(el.h4, .88, .93, .985, 1.0);
+
+    // Tiles: grid (t<.14) → pile (.14–.32) → hero becomes the page photo (.34–.42), others sink → return as next month's grid (.9–1)
+    const toPile = io(seg(t, .12, .30));
+    const sink = seg(t, .34, .42);
+    const back = out(seg(t, .90, .99));
+    for (let i = 0; i < N; i++) {
+      const g = grid[i], p = pile[i];
+      const delay = (i / N) * 0.6;
+      const k = io(seg(toPile, delay * 0.6, delay * 0.6 + 0.45));
+      let x = lerp(g.x, p.x, k), y = lerp(g.y, p.y, k), r = lerp(0, p.r, k), s = 1, o = 1;
+      if (i === 0) {
+        // The hero grows into the page's photograph.
+        const m = io(sink);
+        x = lerp(x, pageRect.x, m); y = lerp(y, pageRect.y, m); r = lerp(r, 0, m);
+        s = lerp(1, pageRect.w / tw, m);
+        o = 1 - seg(t, .43, .45);
+      } else {
+        o = 1 - sink;
+        y += sink * 40 * (1 + (i % 3));
+      }
+      // Next month: the grid rises back from below.
+      if (t > .88) {
+        const gy = g.y + H * 0.9, gx = g.x;
+        x = lerp(gx, g.x, back); y = lerp(gy, g.y, back); r = 0; s = 1;
+        o = back;
+      }
+      tiles[i].style.transform = `translate(${x}px, ${y}px) rotate(${r}deg) scale(${s})`;
+      tiles[i].style.opacity = o;
+    }
+    // Counter
+    const count = Math.round(lerp(0, 30, seg(t, .14, .30)));
+    el.counter.textContent = `${count} OF 30`;
+    el.counter.style.opacity = seg(t, .13, .16) * (1 - seg(t, .31, .34));
+
+    // The page with words (.43–.60)
+    const pageOn = seg(t, .43, .45) * (1 - seg(t, .60, .64));
+    el.page.style.opacity = pageOn;
+    el.pagephoto.style.visibility = t > .43 && t < .64 ? "visible" : "hidden";
+    const capN = Math.round(CAPTION.length * seg(t, .45, .50));
+    const descN = Math.round(DESC.length * seg(t, .50, .58));
+    el.cap.innerHTML = CAPTION.slice(0, capN) + (t > .45 && t < .50 ? '<span class="cursor"></span>' : "");
+    el.desc.innerHTML = DESC.slice(0, descN) + (t >= .50 && t < .58 ? '<span class="cursor"></span>' : "");
+    el.page.style.transform = `translate(-50%, -50%) translateY(${lerp(0, -40, seg(t, .60, .64))}px) scale(${lerp(1, .92, seg(t, .60, .64))})`;
+
+    // The magazine (.62–.80): rises, shows its cover, then slides into the mailer.
+    const magIn = out(seg(t, .62, .68));
+    const intoMailer = io(seg(t, .74, .80));
+    el.mag.style.opacity = magIn * (1 - seg(t, .79, .81));
+    el.mag.style.transform = `translate(-50%, -50%) translateY(${lerp(60, 0, magIn) + lerp(0, 40, intoMailer)}px) rotate(${lerp(-6, 0, magIn)}deg) scale(${lerp(.9, 1, magIn) * lerp(1, .78, intoMailer)})`;
+    // The mailer (.70–.90): appears behind, flap closes, then slides down and out.
+    const mailIn = out(seg(t, .70, .76));
+    const mailOut = io(seg(t, .84, .90));
+    el.mailer.style.opacity = mailIn * (1 - seg(t, .88, .90));
+    el.mailer.style.transform = `translate(-50%, -50%) translateY(${lerp(120, 0, mailIn) + lerp(0, H * .6, mailOut)}px) scale(${lerp(.9, 1, mailIn)})`;
+    el.flap.style.transform = `rotateX(${lerp(-85, 0, io(seg(t, .79, .84)))}deg)`;
+    el.mailer.style.zIndex = t > .795 ? 40 : 10;
+
+    // The ask
+    el.get.style.opacity = seg(t, .80, .84) * (1 - seg(t, .89, .92));
+  }
+
+  // ---- Infinite scroll: two cycles of track; jump by one cycle at the ends.
+  const track = document.getElementById("track");
+  let cycle = 0;
+  function size() {
+    layout();
+    cycle = Math.round(H * 9);
+    track.style.height = (cycle * 2 + H) + "px";
+    if (scrollY < 1 || scrollY > cycle * 2 - 1) scrollTo(0, cycle);
+    tick();
+  }
+  let raf = 0;
+  function tick() {
+    raf = 0;
+    let y = scrollY;
+    if (y >= cycle * 2 - 2) { y -= cycle; scrollTo(0, y); }
+    else if (y <= 1) { y += cycle; scrollTo(0, y); }
+    render(((y % cycle) + cycle) % cycle / cycle);
+  }
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  addEventListener("resize", size);
+  document.fonts?.ready.then(size);
+  size();
+  requestAnimationFrame(size); setTimeout(size, 250);
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  document.body.classList.add("ready");
+})();
+</script>
 </body>
 </html>
