@@ -299,8 +299,6 @@
     el.mag.style.transform = `translateY(${-rise * 88 + settle * 52}%)`;
     el.mag.style.opacity = 1;
     el.hint.style.opacity = t < .05 ? 1 : 0;
-  }
-
     document.querySelector("header").classList.toggle("dark", document.getElementById("end").getBoundingClientRect().top < 40);
   }
 
