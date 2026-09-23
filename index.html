@@ -15,8 +15,7 @@
     --vh: 100vh;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; scrollbar-width: none; }
-  html::-webkit-scrollbar { display: none; }
+  html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 Inter, -apple-system, Helvetica, Arial, sans-serif; overflow-x: hidden; }
   body.ready { }
 
@@ -31,10 +30,22 @@
   header nav { display: flex; gap: 18px; align-items: center; pointer-events: auto; font-size: 13px; }
   header nav a { color: var(--ink); text-decoration: none; }
   header nav .cta { background: var(--ink); color: #fff; padding: 9px 14px; border-radius: 999px; font-weight: 500; }
-  footer { position: fixed; inset: auto 0 0 0; z-index: 20; display: flex; justify-content: space-between; padding: 14px 22px; font-size: 12px; color: var(--muted); pointer-events: none; }
-  footer a { color: var(--muted); text-decoration: none; pointer-events: auto; }
-  footer .hint { display: flex; align-items: center; gap: 8px; }
-  footer .hint i { display: inline-block; width: 1px; height: 22px; background: var(--muted); animation: drop 1.6s ease-in-out infinite; }
+  /* Over the dark ending, the bar turns white. */
+  header.dark img { filter: invert(1); }
+  header.dark nav a { color: #fff; }
+  header.dark nav .cta { background: #fff; color: var(--ink); }
+  header img, header nav a { transition: filter .3s, color .3s, background .3s; }
+  .hint { position: fixed; left: 22px; bottom: 16px; z-index: 20; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); transition: opacity .4s; }
+  .hint i { display: inline-block; width: 1px; height: 22px; background: var(--muted); animation: drop 1.6s ease-in-out infinite; }
+  /* The end of the page: a plain section after the story. */
+  #end { position: relative; background: var(--ink); color: #fff; padding: 20vh 24px 40px; text-align: center; }
+  #end h2 { font: 400 clamp(34px, 6vw, 72px)/1.05 'Instrument Serif', Georgia, serif; letter-spacing: -0.015em; margin: 0 0 14px; }
+  #end h2 i { font-style: italic; }
+  #end p { color: #bbb; margin: 0 auto 32px; max-width: 460px; font-size: 15px; }
+  #end .cta { display: inline-block; background: #fff; color: var(--ink); text-decoration: none; padding: 15px 24px; border-radius: 999px; font-weight: 500; font-size: 15px; }
+  #end small { display: block; margin-top: 14px; color: #888; font-size: 12px; }
+  #end footer { margin-top: 18vh; display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+  #end footer a { color: #888; text-decoration: none; }
   @keyframes drop { 0% { transform: scaleY(0); transform-origin: top; opacity: 0 } 40% { transform: scaleY(1); opacity: 1 } 100% { transform: scaleY(0); transform-origin: bottom; opacity: 0 } }
 
   /* Words */
@@ -94,10 +105,7 @@
   <img src="wordmark.png" alt="Mosaic">
   <nav><a href="mailto:hello@mosaicapp.nyc">Contact</a><a class="cta" href="mailto:hello@mosaicapp.nyc?subject=Mosaic%20beta">Join the beta</a></nav>
 </header>
-<footer>
-  <span class="hint"><i></i> scroll</span>
-  <span><a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; Made in Brooklyn</span>
-</footer>
+<div class="hint" id="hint"><i></i> scroll</div>
 
 <div id="track">
   <div id="stage">
@@ -107,7 +115,6 @@
       <h2 id="h1"><span class="step">01</span>Pick thirty photos<br>from your <i>camera roll</i>.</h2>
       <h2 id="h2"><span class="step">02</span>The words are<br><i>written for you</i>.</h2>
       <h2 id="h3"><span class="step">03</span>Printed, and<br><i>at your door</i>.</h2>
-      <h2 id="h4">Then next month,<br><i>again</i>.</h2>
     </div>
 
     <div id="scene">
@@ -131,13 +138,17 @@
         <div class="stamp">m</div>
         <div class="label"><b>You</b>Your door<br>Your city</div>
       </div>
-      <div class="cta-block" id="get">
-        <a href="mailto:hello@mosaicapp.nyc?subject=Mosaic%20beta">Join the beta</a>
-        <small>iPhone · first issue ships this fall</small>
-      </div>
     </div>
   </div>
 </div>
+
+<section id="end">
+  <h2>Your month, <i>on paper</i>.</h2>
+  <p>Thirty photos, the words written for you, and a real magazine in the mail. Every month, if you like.</p>
+  <a class="cta" href="mailto:hello@mosaicapp.nyc?subject=Mosaic%20beta">Join the beta</a>
+  <small>iPhone · first issue ships this fall</small>
+  <footer><span>Made in Brooklyn</span><span><a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="mailto:hello@mosaicapp.nyc">hello@mosaicapp.nyc</a></span></footer>
+</section>
 
 <script>
 (() => {
@@ -166,7 +177,7 @@
   const $ = (id) => document.getElementById(id);
   const el = { h0: $("h0"), s0: $("s0"), h1: $("h1"), h2: $("h2"), h3: $("h3"), h4: $("h4"), counter: $("counter"),
                page: $("page"), pagephoto: $("pagephoto"), cap: $("cap"), desc: $("desc"), mag: $("mag"), mailer: $("mailer"),
-               flap: $("flap"), get: $("get"), month: $("month") };
+               flap: $("flap"), month: $("month"), hint: $("hint") };
 
   // ---- Helpers
   const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
@@ -204,13 +215,11 @@
     const wordIn = (node, a, b, c, d) => show(node, seg(t, a, b) * (1 - seg(t, c, d)), lerp(24, 0, out(seg(t, a, b))) + lerp(0, -24, seg(t, c, d)));
     wordIn(el.h1, .13, .19, .32, .36);
     wordIn(el.h2, .37, .43, .58, .62);
-    wordIn(el.h3, .62, .68, .84, .88);
-    wordIn(el.h4, .88, .93, .985, 1.0);
+    wordIn(el.h3, .62, .68, 1.1, 1.2);
 
     // Tiles: grid (t<.14) → pile (.14–.32) → hero becomes the page photo (.34–.42), others sink → return as next month's grid (.9–1)
     const toPile = io(seg(t, .12, .30));
     const sink = seg(t, .34, .42);
-    const back = out(seg(t, .90, .99));
     for (let i = 0; i < N; i++) {
       const g = grid[i], p = pile[i];
       const delay = (i / N) * 0.6;
@@ -225,12 +234,6 @@
       } else {
         o = 1 - sink;
         y += sink * 40 * (1 + (i % 3));
-      }
-      // Next month: the grid rises back from below.
-      if (t > .88) {
-        const gy = g.y + H * 0.9, gx = g.x;
-        x = lerp(gx, g.x, back); y = lerp(gy, g.y, back); r = 0; s = 1;
-        o = back;
       }
       tiles[i].style.transform = `translate(${x}px, ${y}px) rotate(${r}deg) scale(${s})`;
       tiles[i].style.opacity = o;
@@ -255,46 +258,36 @@
     const intoMailer = io(seg(t, .74, .80));
     el.mag.style.opacity = magIn * (1 - seg(t, .79, .81));
     el.mag.style.transform = `translate(-50%, -50%) translateY(${lerp(60, 0, magIn) + lerp(0, 40, intoMailer)}px) rotate(${lerp(-6, 0, magIn)}deg) scale(${lerp(.9, 1, magIn) * lerp(1, .78, intoMailer)})`;
-    // The mailer (.70–.90): appears behind, flap closes, then slides down and out.
+    // The mailer (.70–): appears behind, the flap closes, and it stays.
     const mailIn = out(seg(t, .70, .76));
-    const mailOut = io(seg(t, .84, .90));
-    el.mailer.style.opacity = mailIn * (1 - seg(t, .88, .90));
-    el.mailer.style.transform = `translate(-50%, -50%) translateY(${lerp(120, 0, mailIn) + lerp(0, H * .6, mailOut)}px) scale(${lerp(.9, 1, mailIn)})`;
-    el.flap.style.transform = `rotateX(${lerp(-85, 0, io(seg(t, .79, .84)))}deg)`;
+    el.mailer.style.opacity = mailIn;
+    el.mailer.style.transform = `translate(-50%, -50%) translateY(${lerp(120, 0, mailIn)}px) scale(${lerp(.9, 1, mailIn)})`;
+    el.flap.style.transform = `rotateX(${lerp(-85, 0, io(seg(t, .79, .86)))}deg)`;
     el.mailer.style.zIndex = t > .795 ? 40 : 10;
-
-    // The ask
-    el.get.style.opacity = seg(t, .80, .84) * (1 - seg(t, .89, .92));
+    el.hint.style.opacity = t < .05 ? 1 : 0;
+    document.querySelector("header").classList.toggle("dark", document.getElementById("end").getBoundingClientRect().top < 40);
   }
 
-  // ---- Infinite scroll: two cycles of track; jump by one cycle at the ends.
+  // ---- One pass: the story takes nine screens of scrolling, then the
+  // stage stays on its last frame while the ending scrolls into view.
   const track = document.getElementById("track");
-  let cycle = 0, started = false;
+  let cycle = 0;
   function size() {
-    // Keep the same point in the story across a resize.
-    const t = cycle ? (((scrollY % cycle) + cycle) % cycle) / cycle : 0;
     layout();
     cycle = Math.round(H * 9);
-    track.style.height = (cycle * 2 + H) + "px";
-    // Open at the top — two pixels in, so the first upward scroll can wrap.
-    if (!started) { scrollTo(0, 2); started = true; }
-    else scrollTo(0, t * cycle + 2);
+    track.style.height = (cycle + H) + "px";
     tick();
   }
   let raf = 0;
   function tick() {
     raf = 0;
-    let y = scrollY;
-    if (y >= cycle * 2 - 2) { y -= cycle; scrollTo(0, y); }
-    else if (y <= 1) { y += cycle; scrollTo(0, y); }
-    render(((y % cycle) + cycle) % cycle / cycle);
+    render(clamp(scrollY / cycle, 0, 0.999));
   }
   addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
   addEventListener("resize", size);
   document.fonts?.ready.then(size);
   size();
   requestAnimationFrame(size); setTimeout(size, 250);
-  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   document.body.classList.add("ready");
 })();
 </script>
