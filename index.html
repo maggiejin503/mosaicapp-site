@@ -15,7 +15,8 @@
     --vh: 100vh;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+  html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
   body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 Inter, -apple-system, Helvetica, Arial, sans-serif; overflow-x: hidden; }
   body.ready { }
 
@@ -268,12 +269,16 @@
 
   // ---- Infinite scroll: two cycles of track; jump by one cycle at the ends.
   const track = document.getElementById("track");
-  let cycle = 0;
+  let cycle = 0, started = false;
   function size() {
+    // Keep the same point in the story across a resize.
+    const t = cycle ? (((scrollY % cycle) + cycle) % cycle) / cycle : 0;
     layout();
     cycle = Math.round(H * 9);
     track.style.height = (cycle * 2 + H) + "px";
-    if (scrollY < 1 || scrollY > cycle * 2 - 1) scrollTo(0, cycle);
+    // Open at the top — two pixels in, so the first upward scroll can wrap.
+    if (!started) { scrollTo(0, 2); started = true; }
+    else scrollTo(0, t * cycle + 2);
     tick();
   }
   let raf = 0;
