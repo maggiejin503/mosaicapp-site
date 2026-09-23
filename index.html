@@ -94,15 +94,8 @@
   .env .stamp { position: absolute; right: 9%; top: 15%; width: 34px; height: 40px; border: 1px dashed #8a7a5a; border-radius: 2px; font: italic 400 14px/40px 'Instrument Serif', serif; text-align: center; color: #6b5c3f; }
   .env .front, .env .back, .env .tab { transition: none; }
 
-  .mag { position: absolute; left: 4%; right: 4%; top: 11%; bottom: 3%; border-radius: 3px; will-change: transform; perspective: 1400px; }
-  .mag .pg { position: absolute; inset: 0; background: #fff; border-radius: 3px; overflow: hidden; transform-origin: left center; backface-visibility: hidden; -webkit-backface-visibility: hidden;
-             box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 20px 40px rgba(0,0,0,.16); will-change: transform; }
-  .mag .pg .ph { position: absolute; background: #ddd center/cover; }
-  .mag .pg svg { position: absolute; overflow: visible; }
-  .mag .pg svg path { fill: none; stroke: #222; stroke-width: 1.1; stroke-linecap: round; opacity: .85; }
-  .mag .pg .folio { position: absolute; bottom: 3%; font: 500 7px/1 Inter, sans-serif; letter-spacing: .12em; color: #999; }
-  .mag .pg .folio.l { left: 6%; } .mag .pg .folio.r { right: 6%; }
-  .mag .pg .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,0) 30%); opacity: 0; pointer-events: none; }
+  .mag { position: absolute; left: 4%; right: 4%; top: 11%; bottom: 3%; border-radius: 3px; will-change: transform; box-shadow: 0 24px 48px -12px rgba(0,0,0,.28); }
+  .mag .pg { position: absolute; inset: 0; background: #fff; border-radius: 3px; overflow: hidden; }
   .mag .coverphoto { position: absolute; inset: 0; background: #bbb center/cover; }
   .mag .spine { position: absolute; left: 0; top: 0; bottom: 0; width: 7px; background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,0)); z-index: 1; }
   .mag .sheen { position: absolute; inset: 0; background: linear-gradient(105deg, rgba(255,255,255,.10), rgba(255,255,255,0) 45%); }
@@ -206,71 +199,6 @@
   document.getElementById("pagephoto").style.background = heroBG;
   document.getElementById("coverphoto").style.background = "url(photos/cover.jpg) center/cover";
 
-  // ---- Inside pages: a few random layouts, words drawn as scribbles.
-  const PAGES = 6;
-  const mag = document.getElementById("mag");
-  const cover = document.getElementById("cover");
-  const pages = [cover];
-  {
-    let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-    const scribble = (x, y, w, lines, gap, bold) => {
-      // Each line is a wavy stroke of a random length, like handwriting seen from far away.
-      let d = "";
-      for (let l = 0; l < lines; l++) {
-        const len = w * (l === lines - 1 ? 0.45 + rnd() * 0.4 : 0.92 + rnd() * 0.08);
-        const yy = y + l * gap;
-        d += `M${x} ${yy}`;
-        for (let px = 3; px <= len; px += 3) d += ` q1.5 ${(rnd() - .5) * 2.4} 3 0`;
-      }
-      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("viewBox", "0 0 100 129"); svg.setAttribute("preserveAspectRatio", "none");
-      svg.style.left = "0"; svg.style.top = "0"; svg.style.width = "100%"; svg.style.height = "100%";
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", d); path.setAttribute("vector-effect", "non-scaling-stroke");
-      if (bold) path.style.strokeWidth = "1.8";
-      svg.appendChild(path); return svg;
-    };
-    const photo = (pg, x, y, w, h) => {
-      const ph = document.createElement("div"); ph.className = "ph";
-      ph.style.left = x + "%"; ph.style.top = y + "%"; ph.style.width = w + "%"; ph.style.height = h + "%";
-      ph.style.backgroundImage = `url(${PHOTOS[1 + Math.floor(rnd() * (PHOTOS.length - 1))]})`;
-      pg.appendChild(ph);
-    };
-    for (let i = 1; i <= PAGES; i++) {
-      const pg = document.createElement("div"); pg.className = "pg";
-      const kind = i % 4;
-      if (kind === 1) {           // one big photo, words under it
-        photo(pg, 7, 6, 86, 52);
-        pg.appendChild(scribble(7, 66, 86, 1, 0, true));
-        pg.appendChild(scribble(7, 74, 86, 6, 5, false));
-      } else if (kind === 2) {    // photo left, a column of words right
-        photo(pg, 7, 8, 44, 62);
-        pg.appendChild(scribble(57, 12, 36, 1, 0, true));
-        pg.appendChild(scribble(57, 20, 36, 9, 5, false));
-        photo(pg, 57, 74, 36, 40);
-      } else if (kind === 3) {    // two photos up top, words along the bottom
-        photo(pg, 7, 6, 41, 40); photo(pg, 52, 6, 41, 40);
-        pg.appendChild(scribble(7, 54, 86, 1, 0, true));
-        pg.appendChild(scribble(7, 62, 40, 8, 5, false));
-        pg.appendChild(scribble(53, 62, 40, 8, 5, false));
-      } else {                    // full-bleed photo with a caption strip
-        photo(pg, 0, 0, 100, 100);
-        const strip = document.createElement("div"); strip.className = "ph";
-        strip.style.cssText = "left:0;right:0;bottom:0;height:22%;background:#fff;width:100%;top:auto";
-        pg.appendChild(strip);
-        pg.appendChild(scribble(7, 106, 86, 1, 0, true));
-        pg.appendChild(scribble(7, 113, 86, 3, 4.5, false));
-      }
-      const folio = document.createElement("div"); folio.className = "folio " + (i % 2 ? "r" : "l"); folio.textContent = String(i + 1);
-      pg.appendChild(folio);
-      const shade = document.createElement("div"); shade.className = "shade"; pg.appendChild(shade);
-      mag.insertBefore(pg, cover);   // under the cover, in order
-      pages.push(pg);
-    }
-    // Stack: the cover on top, then page 1, page 2…
-    pages.forEach((pg, i) => { pg.style.zIndex = String(100 - i); });
-  }
-
   const $ = (id) => document.getElementById(id);
   const el = { h0: $("h0"), s0: $("s0"), h1: $("h1"), h2: $("h2"), h3: $("h3"), counter: $("counter"),
                page: $("page"), pagephoto: $("pagephoto"), cap: $("cap"), desc: $("desc"), mag: $("mag"), env: $("env"),
@@ -373,38 +301,23 @@
     el.hint.style.opacity = t < .05 ? 1 : 0;
   }
 
-  /// Pages turn about the spine, quickly, one after another: f in [0, 1].
-  function flip(f) {
-    for (let i = 0; i < pages.length - 1; i++) {
-      const local = io(seg(f, i / PAGES, (i + 1) / PAGES));
-      const angle = -180 * local;
-      pages[i].style.transform = `rotateY(${angle}deg)`;
-      // Hide a turned page fully once it's past the spine.
-      pages[i].style.visibility = local >= 1 ? "hidden" : "visible";
-      // The page underneath darkens a little while the one above it turns.
-      const under = pages[i + 1].querySelector(".shade");
-      if (under) under.style.opacity = local > 0 && local < 1 ? 0.6 * Math.sin(local * Math.PI) : 0;
-    }
     document.querySelector("header").classList.toggle("dark", document.getElementById("end").getBoundingClientRect().top < 40);
   }
 
   // ---- One pass: the story takes nine screens of scrolling, then the
   // stage stays on its last frame while the ending scrolls into view.
   const track = document.getElementById("track");
-  let cycle = 0, flipStart = 0, flipLen = 0;
+  let cycle = 0;
   function size() {
     layout();
-    cycle = Math.round(H * 10);          // the story
-    flipStart = Math.round(H * 9.4);     // pages start turning once the magazine has settled
-    flipLen = Math.round(H * 3.2);       // and turn over about three screens
-    track.style.height = (flipStart + flipLen + H) + "px";
+    cycle = Math.round(H * 10);
+    track.style.height = (cycle + H) + "px";
     tick();
   }
   let raf = 0;
   function tick() {
     raf = 0;
     render(clamp(scrollY / cycle, 0, 0.999));
-    flip(clamp((scrollY - flipStart) / flipLen));
   }
   addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
   addEventListener("resize", size);
