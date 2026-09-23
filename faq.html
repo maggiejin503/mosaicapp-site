@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FAQ — Mosaic</title>
+<meta name="description" content="How Mosaic works, what it costs, and what happens to your photos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  h2 { font: 500 11px/1 Inter, sans-serif; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 48px 0 6px; }
+  details { border-top: 1px solid var(--line); }
+  details:last-of-type { border-bottom: 1px solid var(--line); }
+  summary { list-style: none; cursor: pointer; padding: 18px 36px 18px 0; font: 400 21px/1.3 'Instrument Serif', Georgia, serif; position: relative; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; position: absolute; right: 4px; top: 16px; font: 300 24px/1 Inter, sans-serif; color: var(--muted); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin: 0 0 20px; color: #333; max-width: 620px; font-size: 15.5px; }
+  details a { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <a href="/"><img src="wordmark.png" alt="Mosaic"></a>
+  <nav><a class="quiet" href="/pricing">Pricing</a><a class="quiet" href="/faq">FAQ</a><a href="mailto:hello@mosaicapp.nyc">Contact</a><span class="cta">Launches Oct 2026</span></nav>
+</header>
+<main>
+  <h1>Questions, <i>answered.</i></h1>
+  <p class="lede">If yours isn't here, write to <a href="mailto:hello@mosaicapp.nyc" style="color:var(--ink)">hello@mosaicapp.nyc</a>. A person reads it.</p>
+
+  <h2>The basics</h2>
+  <details open><summary>What is Mosaic?</summary><p>An app that turns a month of your phone photos into a printed magazine. You pick the photos and a cover, the words are written for you, and a 32-page issue arrives in the mail. There's a new design every month, so no two issues look alike.</p></details>
+  <details><summary>How much work is it?</summary><p>About ten minutes. Pick your photos, choose a cover, read over the words and change any you like, then order. You can do it in one sitting at the end of the month or add photos as the month goes.</p></details>
+  <details><summary>Who writes the words?</summary><p>Mosaic does, from the photos themselves: where they were taken, the day, what's plainly going on in them. Every caption and description is yours to edit, or to clear and write from scratch. Anything you write stays exactly as you wrote it.</p></details>
+  <details><summary>Does it make things up?</summary><p>It's built not to. It only uses what the photo shows and the facts attached to it, and it's told to say less rather than invent. If you'd rather it said nothing at all for a photo, clear the box and write your own line.</p></details>
+  <details><summary>How many photos do I need?</summary><p>It depends on the month's design, and the app keeps count for you. Most designs take around thirty. Fewer than that and the issue won't be complete; you can't add more than the design has room for.</p></details>
+
+  <h2>The magazine</h2>
+  <details><summary>What does it look like in the hand?</summary><p>8.5 by 11 inches, 32 pages plus the cover, perfect bound with a glossy cover on premium paper. Full-bleed photographs, printed on a professional press. It's a magazine, not a photo book.</p></details>
+  <details><summary>Who designs the layouts?</summary><p>A designer publishes a new issue design every month. Your photos and words flow into it on their own, with no cropping or dragging to do. The design changes; the process doesn't.</p></details>
+  <details><summary>Can I make one for a trip, or as a gift?</summary><p>Yes. A single issue is exactly that: one month, or one occasion, printed once. You can also order extra copies of any issue to send to someone else, and they travel in the same parcel.</p></details>
+  <details><summary>Can I preview it before I order?</summary><p>Always. Once the issue is complete you can page through the whole thing in the app before anything is charged or printed.</p></details>
+
+  <h2>Money and delivery</h2>
+  <details><summary>What does it cost?</summary><p>A single issue is $50. A subscription is $35 a month, for a minimum of three months and month to month after that. Both include printing and shipping. See <a href="/pricing">Pricing</a> for extra copies and second issues.</p></details>
+  <details><summary>When does it arrive?</summary><p>Every issue closes at the end of the month, so the whole month can print together. It usually arrives within a week or two of that. The app shows where it is and tells you when it ships.</p></details>
+  <details><summary>Where do you ship?</summary><p>Anywhere in the United States, included in the price. More countries later.</p></details>
+  <details><summary>What if I miss the end of the month?</summary><p>Nothing is lost. Your photos stay where they are and roll into the next month's issue.</p></details>
+  <details><summary>How do I cancel a subscription?</summary><p>In the app, on the You tab, tap Manage subscription. It opens Stripe's own page, and the cancellation takes effect at the end of the month you've already paid for. No emails to send, no one to convince.</p></details>
+  <details><summary>It arrived damaged, or went to the wrong address.</summary><p>Send us a photo of the damage and we'll reprint and repost at no cost; you don't need to send it back. If the address was wrong and it hasn't gone to the printer yet, we can change it. Once it's printing we can't, but we can reprint to the right one.</p></details>
+
+  <h2>Your photos</h2>
+  <details><summary>Who can see my photos?</summary><p>Nobody but you and the printer. They're stored privately, used only to make your issue, and deleted from our servers three months after it ships. We don't use them to train anything and we don't sell anything about you.</p></details>
+  <details><summary>Does the app go through my whole camera roll?</summary><p>No. You choose the photos. The app only sees the ones you pick.</p></details>
+  <details><summary>Can friends add photos to the same issue?</summary><p>Yes. A group issue has a code that friends enter in Mosaic to join it. Everyone adds photos, and the words are written for all of them.</p></details>
+  <details><summary>Which phones does it work on?</summary><p>iPhone, from October 2026. Android isn't planned yet.</p></details>
+</main>
+<footer><span>Made in Brooklyn</span><span><a href="/pricing">Pricing</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="mailto:hello@mosaicapp.nyc">hello@mosaicapp.nyc</a></span></footer>
+</body>
+</html>

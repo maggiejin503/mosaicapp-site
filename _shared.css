@@ -1,0 +1,15 @@
+:root { --ink: #111; --muted: #777; --paper: #f6f4ef; --line: rgba(0,0,0,.08); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 Inter, -apple-system, Helvetica, Arial, sans-serif; -webkit-text-size-adjust: 100%; }
+header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; }
+header img { height: 22px; width: auto; }
+header nav { display: flex; gap: 18px; align-items: center; font-size: 13px; }
+header nav a { color: var(--ink); text-decoration: none; }
+header nav .cta { background: var(--ink); color: #fff; padding: 9px 14px; border-radius: 999px; font-weight: 500; }
+main { max-width: 860px; margin: 0 auto; padding: 8vh 24px 12vh; }
+h1 { font: 400 clamp(44px, 7vw, 84px)/1.02 'Instrument Serif', Georgia, serif; letter-spacing: -0.02em; margin: 0 0 14px; }
+h1 i { font-style: italic; }
+.lede { color: var(--muted); font-size: 17px; max-width: 520px; margin: 0 0 56px; }
+footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 24px 22px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); }
+footer a { color: var(--muted); text-decoration: none; }
+@media (max-width: 600px) { header nav { gap: 12px; } header nav .quiet { display: none; } }

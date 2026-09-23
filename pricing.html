@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pricing — Mosaic</title>
+<meta name="description" content="A single issue, or a subscription. Printing and shipping included.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 56px; }
+  .plan { background: #fff; border-radius: 18px; padding: 30px 28px 26px; border: 1px solid var(--line); display: flex; flex-direction: column; }
+  .plan.dark { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .plan .name { font: 500 11px/1 Inter, sans-serif; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+  .plan.dark .name { color: #aaa; }
+  .plan .price { font: 400 clamp(44px, 6vw, 64px)/1 'Instrument Serif', Georgia, serif; letter-spacing: -0.02em; }
+  .plan .price small { font: 400 15px/1 Inter, sans-serif; color: var(--muted); margin-left: 6px; letter-spacing: 0; }
+  .plan.dark .price small { color: #aaa; }
+  .plan .for { margin: 10px 0 22px; color: var(--muted); font-size: 14px; }
+  .plan.dark .for { color: #bbb; }
+  .plan ul { list-style: none; margin: 0 0 26px; padding: 0; font-size: 14.5px; }
+  .plan li { padding: 9px 0; border-top: 1px solid var(--line); }
+  .plan.dark li { border-color: rgba(255,255,255,.12); }
+  .plan .pill { margin-top: auto; align-self: flex-start; font-size: 13px; font-weight: 500; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: #fff; }
+  .plan.dark .pill { background: #fff; color: var(--ink); }
+  .extras { margin: 0 0 56px; }
+  .extras h2, .what h2 { font: 400 30px/1.15 'Instrument Serif', Georgia, serif; margin: 0 0 14px; letter-spacing: -0.01em; }
+  .extras h2 i, .what h2 i { font-style: italic; }
+  .row { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); font-size: 15px; }
+  .row:last-child { border-bottom: 1px solid var(--line); }
+  .row span:last-child { white-space: nowrap; font-weight: 500; }
+  .row small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .what p { color: #333; max-width: 600px; }
+  .what .spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 22px; }
+  .what .spec div { border-top: 1px solid var(--line); padding-top: 12px; font-size: 14px; }
+  .what .spec b { display: block; font-weight: 500; font-size: 11px; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  @media (max-width: 680px) { .plans { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <a href="/"><img src="wordmark.png" alt="Mosaic"></a>
+  <nav><a class="quiet" href="/pricing">Pricing</a><a class="quiet" href="/faq">FAQ</a><a href="mailto:hello@mosaicapp.nyc">Contact</a><span class="cta">Launches Oct 2026</span></nav>
+</header>
+<main>
+  <h1>One price. <i>Printed and posted.</i></h1>
+  <p class="lede">Every issue is 32 pages plus the cover, on a real press, mailed to your door. Printing and shipping are included in both.</p>
+
+  <div class="plans">
+    <section class="plan">
+      <div class="name">Single issue</div>
+      <div class="price">$50<small>one time</small></div>
+      <div class="for">One month, one magazine. Try it, or make one for a trip or an occasion.</div>
+      <ul>
+        <li>32 pages plus cover, perfect bound</li>
+        <li>Full colour on premium paper, glossy cover</li>
+        <li>Shipping included, anywhere in the US</li>
+        <li>Your words written for you, editable</li>
+      </ul>
+      <span class="pill">In the app, Oct 2026</span>
+    </section>
+    <section class="plan dark">
+      <div class="name">Subscription</div>
+      <div class="price">$35<small>a month</small></div>
+      <div class="for">An issue every month. Three months to start, then month to month, cancel any time.</div>
+      <ul>
+        <li>Everything in a single issue</li>
+        <li>$15 less per issue</li>
+        <li>A new design from a different designer each month</li>
+        <li>A shelf that fills up</li>
+      </ul>
+      <span class="pill">In the app, Oct 2026</span>
+    </section>
+  </div>
+
+  <section class="extras">
+    <h2>If you want <i>more than one</i></h2>
+    <div class="row"><span>Extra copy of your issue<small>Same issue, same parcel, for someone else's shelf</small></span><span>$40</span></div>
+    <div class="row"><span>A second issue in the same month<small>A separate magazine from a different set of photos</small></span><span>$35 for subscribers · $40 otherwise</span></div>
+  </section>
+
+  <section class="what">
+    <h2>What you're <i>paying for</i></h2>
+    <p>Not a photo book and not a print-on-demand booklet. Each issue is made the way a magazine on a newsstand is made: full-bleed pages, perfect binding, a proper cover. Prices include the printing, the postage and the tax, so the number you see is the number you pay.</p>
+    <div class="spec">
+      <div><b>Size</b>8.5 × 11 in</div>
+      <div><b>Pages</b>32 + cover</div>
+      <div><b>Binding</b>Perfect bound</div>
+      <div><b>Paper</b>Premium, glossy cover</div>
+      <div><b>Arrives</b>1–2 weeks after month end</div>
+    </div>
+  </section>
+</main>
+<footer><span>Made in Brooklyn</span><span><a href="/faq">FAQ</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="mailto:hello@mosaicapp.nyc">hello@mosaicapp.nyc</a></span></footer>
+</body>
+</html>
