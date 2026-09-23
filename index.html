@@ -55,6 +55,7 @@
   .words h2 { font: 400 clamp(30px, 5.2vw, 62px)/1.06 'Instrument Serif', Georgia, serif; letter-spacing: -0.015em; }
   .words h2 i { font-style: italic; }
   .words .step { display: block; font: 500 11px/1 Inter, sans-serif; letter-spacing: .22em; color: var(--muted); margin-bottom: 18px; }
+  .words .or { display: block; font: 400 15px/1.4 Inter, sans-serif; letter-spacing: 0; color: var(--muted); margin-top: 16px; }
   .words p.sub { position: absolute; left: 0; right: 0; top: 0; margin: 0; padding: 0 20px; color: var(--muted); font-size: 15px; opacity: 0; }
 
   /* The scene: everything the photos become */
@@ -127,7 +128,7 @@
       <h1 id="h0">Your month, printed.</h1>
       <p class="sub" id="s0">A magazine made from your phone. Every month.</p>
       <h2 id="h1"><span class="step">01</span>Pick photos from<br>your <i>camera roll</i>.</h2>
-      <h2 id="h2"><span class="step">02</span>The words are<br><i>written for you</i>.</h2>
+      <h2 id="h2"><span class="step">02</span>The words are<br><i>written for you</i>.<span class="or">Or write them yourself.</span></h2>
       <h2 id="h3"><span class="step">03</span>Printed, and<br><i>at your door</i>.</h2>
     </div>
 
@@ -174,10 +175,11 @@
 (() => {
   // ---- Photos. Put image URLs here and the tiles use them; anything null
   // is a coloured placeholder so the page never looks broken.
-  const PHOTOS = Array.from({ length: 18 }, (_, i) => `photos/${i + 1}.jpg`);
+  // The first one is the photograph that grows into the page.
+  const PHOTOS = [5, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((n) => `photos/${n}.jpg`);
   const HUES = [24, 200, 340, 96, 42, 262, 180, 8, 150, 300, 60, 220, 330, 120, 30, 250, 190, 12];
-  const CAPTION = "Sand in everything.";
-  const DESC = "Five of us, one net, and the lake going grey behind it. Sunday at the beach courts, and still finding sand in the car on Tuesday.";
+  const CAPTION = "Paris, in the rain.";
+  const DESC = "Umbrellas up outside the Louvre, the arch behind, and a grey afternoon nobody minded. Tuesday, and the best day of the trip.";
 
   const scene = document.getElementById("scene");
   const N = PHOTOS.length;
