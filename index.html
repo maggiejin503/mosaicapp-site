@@ -112,13 +112,13 @@
     <div class="words">
       <h1 id="h0">Your month, printed.</h1>
       <p class="sub" id="s0">A magazine made from your phone. Every month.</p>
-      <h2 id="h1"><span class="step">01</span>Pick thirty photos<br>from your <i>camera roll</i>.</h2>
+      <h2 id="h1"><span class="step">01</span>Pick photos from<br>your <i>camera roll</i>.</h2>
       <h2 id="h2"><span class="step">02</span>The words are<br><i>written for you</i>.</h2>
       <h2 id="h3"><span class="step">03</span>Printed, and<br><i>at your door</i>.</h2>
     </div>
 
     <div id="scene">
-      <div class="counter" id="counter">0 OF 30</div>
+      <div class="counter" id="counter">0 PHOTOS</div>
       <div class="page" id="page">
         <div class="photo" id="pagephoto"></div>
         <div>
@@ -144,7 +144,7 @@
 
 <section id="end">
   <h2>Your month, <i>on paper</i>.</h2>
-  <p>Thirty photos, the words written for you, and a real magazine in the mail. Every month, if you like.</p>
+  <p>Your photos, the words written for you, and a real magazine in the mail. Every month, if you like.</p>
   <span class="cta">Launches Oct 2026</span>
   <small>iPhone · <a href="mailto:hello@mosaicapp.nyc?subject=Mosaic" style="color:#888">hello@mosaicapp.nyc</a></small>
   <footer><span>Made in Brooklyn</span><span><a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="mailto:hello@mosaicapp.nyc">hello@mosaicapp.nyc</a></span></footer>
@@ -239,8 +239,8 @@
       tiles[i].style.opacity = o;
     }
     // Counter
-    const count = Math.round(lerp(0, 30, seg(t, .14, .30)));
-    el.counter.textContent = `${count} OF 30`;
+    const count = Math.round(lerp(0, N, seg(t, .14, .30)));
+    el.counter.textContent = `${count} PHOTO${count === 1 ? "" : "S"}`;
     el.counter.style.opacity = seg(t, .13, .16) * (1 - seg(t, .31, .34));
 
     // The page with words (.43–.60)
