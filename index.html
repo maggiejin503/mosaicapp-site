@@ -92,7 +92,7 @@
      and swings up as more of it comes free. */
   .env .torn { position: absolute; left: 0; top: 0; height: 10.5%; width: 0; background: #dfd4bf; border-radius: 4px 0 0 0;
                clip-path: polygon(0 0, 100% 0, 100% 78%, 96% 100%, 92% 80%, 88% 100%, 84% 82%, 80% 100%, 76% 78%, 72% 100%, 68% 84%, 64% 100%, 60% 80%, 56% 100%, 52% 78%, 48% 100%, 44% 84%, 40% 100%, 36% 80%, 32% 100%, 28% 78%, 24% 100%, 20% 84%, 16% 100%, 12% 80%, 8% 100%, 4% 78%, 0 100%); box-shadow: 0 10px 18px rgba(0,0,0,.18);
-               transform-origin: right center; will-change: transform, width, opacity; z-index: 3; }
+               transform-origin: right top; will-change: transform, width, opacity; z-index: 3; }
   .env .label { position: absolute; left: 10%; bottom: 10%; background: #fff; padding: 10px 12px; border-radius: 3px; font: 400 10px/1.5 Inter, sans-serif; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
   .env .label b { display: block; font-weight: 600; }
   .env .stamp { position: absolute; right: 9%; top: 15%; width: 34px; height: 40px; border: 1px dashed #8a7a5a; border-radius: 2px; font: italic 400 14px/40px 'Instrument Serif', serif; text-align: center; color: #6b5c3f; }
@@ -303,7 +303,10 @@
     const gone = seg(tear, .92, 1);
     el.torn.style.width = `${tear * 100}%`;
     el.torn.style.opacity = tear > 0 ? 1 - gone : 0;
-    el.torn.style.transform = `translateY(${-tear * 55 - gone * 120}%) translateX(${gone * 12}%) rotate(${-8 - tear * 10}deg)`;
+    // Pulled from the left corner: the freed part pivots on the tear point,
+    // lifting and folding back the way a strip does in the hand, so the
+    // tear runs left to right and ends at the far corner.
+    el.torn.style.transform = `translate(${gone * 40}%, ${-12 - gone * 80}%) rotate(${158 + tear * 18}deg)`;
     // The magazine: hidden inside until it rises; out and centred at the end.
     el.mag.style.transform = `translateY(${-rise * 88 + settle * 52}%)`;
     el.mag.style.opacity = 1;
