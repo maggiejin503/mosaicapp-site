@@ -29,7 +29,7 @@
   header img { height: 22px; width: auto; pointer-events: auto; }
   header nav { display: flex; gap: 18px; align-items: center; pointer-events: auto; font-size: 13px; }
   header nav a { color: var(--ink); text-decoration: none; }
-  header nav .cta { background: var(--ink); color: #fff; padding: 9px 14px; border-radius: 999px; font-weight: 500; }
+  header nav .cta { background: var(--ink); color: #fff; padding: 9px 14px; border-radius: 999px; font-weight: 500; letter-spacing: .01em; }
   /* Over the dark ending, the bar turns white. */
   header.dark img { filter: invert(1); }
   header.dark nav a { color: #fff; }
@@ -103,7 +103,7 @@
 <body>
 <header>
   <img src="wordmark.png" alt="Mosaic">
-  <nav><a href="mailto:hello@mosaicapp.nyc">Contact</a><a class="cta" href="mailto:hello@mosaicapp.nyc?subject=Mosaic%20beta">Join the beta</a></nav>
+  <nav><a href="mailto:hello@mosaicapp.nyc">Contact</a><span class="cta">Launches Oct 2026</span></nav>
 </header>
 <div class="hint" id="hint"><i></i> scroll</div>
 
@@ -145,8 +145,8 @@
 <section id="end">
   <h2>Your month, <i>on paper</i>.</h2>
   <p>Thirty photos, the words written for you, and a real magazine in the mail. Every month, if you like.</p>
-  <a class="cta" href="mailto:hello@mosaicapp.nyc?subject=Mosaic%20beta">Join the beta</a>
-  <small>iPhone · first issue ships this fall</small>
+  <span class="cta">Launches Oct 2026</span>
+  <small>iPhone · <a href="mailto:hello@mosaicapp.nyc?subject=Mosaic" style="color:#888">hello@mosaicapp.nyc</a></small>
   <footer><span>Made in Brooklyn</span><span><a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="mailto:hello@mosaicapp.nyc">hello@mosaicapp.nyc</a></span></footer>
 </section>
 
