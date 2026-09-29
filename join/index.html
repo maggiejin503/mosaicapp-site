@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join a Mosaic issue</title>
+<meta name="description" content="You've been invited to make a magazine together on Mosaic.">
+<meta property="og:title" content="You're invited to a Mosaic issue">
+<meta property="og:description" content="Add your photos to a magazine you're making together.">
+<meta property="og:image" content="https://mosaicapp.nyc/wordmark-email.png">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #111; --muted: #777; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 16px/1.5 Inter, -apple-system, Helvetica, Arial, sans-serif;
+         -webkit-text-size-adjust: 100%; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; }
+  header { padding: 28px 22px 0; }
+  header img { height: 24px; width: auto; display: block; }
+  main { flex: 1; width: 100%; max-width: 420px; padding: 0 28px 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  h1 { font: 700 24px/1.25 Inter, -apple-system, sans-serif; margin: 0 0 10px; }
+  p { color: var(--muted); font-size: 15px; margin: 0; }
+  .label { font-size: 13px; color: var(--muted); margin: 34px 0 4px; }
+  .code { font-size: 44px; font-weight: 700; letter-spacing: .14em; margin: 0 0 30px; padding-left: .14em; }
+  a.btn { display: block; width: 100%; max-width: 300px; background: #000; color: #fff; text-decoration: none; padding: 17px 24px;
+          border-radius: 999px; font-weight: 600; letter-spacing: .1em; font-size: 13px; text-transform: uppercase; }
+  a.btn.quiet { background: #fff; color: var(--ink); border: 1px solid rgba(0,0,0,.2); margin-top: 12px; }
+  .steps { margin-top: 30px; font-size: 14px; color: var(--muted); max-width: 320px; }
+  .steps b { color: var(--ink); font-weight: 600; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header><a href="https://mosaicapp.nyc"><img src="/wordmark.png" alt="Mosaic"></a></header>
+<main>
+  <h1>You're invited to a Mosaic issue</h1>
+  <p>A magazine you make together, printed and mailed.</p>
+
+  <div id="invite" hidden>
+    <div class="label">Your code</div>
+    <div class="code" id="code"></div>
+    <a class="btn" id="open" href="#">Open in Mosaic</a>
+    <a class="btn quiet" id="get" href="#" hidden>Get Mosaic</a>
+    <p class="steps" id="how"></p>
+  </div>
+
+  <div id="missing" hidden>
+    <p class="steps">This invitation has no code in it. Ask your friend to send it again.</p>
+  </div>
+</main>
+<script>
+(function () {
+  // The App Store page, once there is one. Left empty until then: the
+  // button stays hidden and the words say what to do instead.
+  var APP_STORE = "";
+
+  var raw = new URLSearchParams(location.search).get("code") || location.hash || "";
+  var code = raw.replace(/\D/g, "").slice(0, 6);
+  if (code.length !== 6) { document.getElementById("missing").hidden = false; return; }
+
+  document.getElementById("invite").hidden = false;
+  document.getElementById("code").textContent = code.slice(0, 3) + " " + code.slice(3);
+  var link = "mosaics://join/" + code;
+  document.getElementById("open").href = link;
+
+  var get = document.getElementById("get");
+  var how = document.getElementById("how");
+  if (APP_STORE) {
+    get.href = APP_STORE; get.hidden = false;
+    how.innerHTML = "<b>Don't have Mosaic yet?</b> Get the app, then come back and tap this invitation again. Or choose With friends in the app and type the code.";
+  } else {
+    how.innerHTML = "<b>Nothing happened?</b> You need the Mosaic app first. Once you have it, tap this invitation again, or choose With friends in the app and type the code.";
+  }
+
+  // Straight into the app when it's there. If it isn't, nothing happens
+  // and this page stays, with the code to type by hand.
+  setTimeout(function () { location.href = link; }, 500);
+})();
+</script>
+</body>
+</html>
